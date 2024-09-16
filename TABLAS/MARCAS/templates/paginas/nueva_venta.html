@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Nueva Venta{% endblock %}
+
+{% block contenido %}
+<body>
+    <div class="header">
+        <div>
+            <h2>Hola, Usuario</h2>
+            <p>Sucursal: la Merced</p>
+        </div>
+        <div>
+            <a href="{% url 'productos_baja_existencia' %}" class="btn btn-success btn-block">LISTA DE VENTAS</a>
+            <a href="{% url 'productos_baja_existencia' %}" class="btn btn-success btn-block">STOCK</a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="sales-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NOMBRE</th>
+                        <th>CANTIDAD</th>
+                        <th>PRECIO</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-table">
+                    <!-- Las ventas se agregarán aquí dinámicamente -->
+                </tbody>
+            </table>
+            <h3>TOTAL: $<span id="total-amount">0</span></h3>
+        </div>
+
+        <div class="buttons">
+            <div class="animal-buttons">
+                <button onclick="showCategories()">PERRO</button>
+                <button onclick="showCategories()">GATO</button>
+                <button onclick="showCategories()">VACA</button>
+                <button onclick="showCategories()">CABALLO</button>
+                <button onclick="showCategories()">CONEJO</button>
+                <button onclick="showCategories()">AVE</button>
+            </div>
+            <div class="category-buttons" id="category-buttons">
+                <button onclick="addItem('Alimento')">ALIMENTO</button>
+                <button onclick="addItem('Indumentaria')">INDUMENTARIA</button>
+                <button onclick="addItem('Medicina')">MEDICINA</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button onclick="cancelSale()">CANCELAR</button>
+        <button onclick="printSale()">IMPRIMIR</button>
+        <button onclick="saveSale()">GUARDAR</button>
+        <button onclick="finishSale()">FINALIZAR</button>
+    </div>
+
+    <script>
+        function showCategories() {
+            document.getElementById('category-buttons').style.display = 'block';
+        }
+
+        function addItem(category) {
+            const table = document.getElementById('sales-table');
+            const row = table.insertRow();
+            const nameCell = row.insertCell(0);
+            const quantityCell = row.insertCell(1);
+            const priceCell = row.insertCell(2);
+            const totalCell = row.insertCell(3);
+
+            nameCell.textContent = category;
+            quantityCell.textContent = '1';
+            const price = Math.floor(Math.random() * 1000) + 100; // Precio aleatorio entre 100 y 1100
+            priceCell.textContent = '$' + price;
+            totalCell.textContent = '$' + price;
+
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const table = document.getElementById('sales-table');
+            let total = 0;
+            for (let i = 0; i < table.rows.length; i++) {
+                total += parseInt(table.rows[i].cells[3].textContent.replace('$', ''));
+            }
+            document.getElementById('total-amount').textContent = total;
+        }
+
+        function cancelSale() {
+            document.getElementById('sales-table').innerHTML = '';
+            updateTotal();
+        }
+
+        function printSale() {
+            window.print();
+        }
+
+        function saveSale() {
+            alert('Venta guardada');
+        }
+
+        function finishSale() {
+            alert('Venta finalizada');
+            cancelSale();
+        }
+    </script>
+</body>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
